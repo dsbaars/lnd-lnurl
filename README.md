@@ -19,6 +19,12 @@ docker run -t -i --rm -v cred:/code/cred:ro -v $PWD/lndlnurl.conf:/code/lndlnurl
 docker run -t -i --rm --network="umbrel_main_network"  -v ~/umbrel/lnd:/.lnd:ro -v $PWD/lndlnurl.conf:/code/lndlnurl.conf ghcr.io/dsbaars/lnd-lnurl:latest  LNURL1DP68GURN8GHJ7MRWW3UXYMM59E3K7MF0D3H82UNV9ACXZ7FLW4EK2UNFVS7NXWPKXSURYYAF0CA
 ````
 
+## Docker (on Citadel machines):
+
+```sh
+docker run -t -i --rm --network="citadel_main_network"  -v ~/citadel/lnd:/.lnd:ro -v $PWD/lndlnurl.conf:/code/lndlnurl.conf ghcr.io/dsbaars/lnd-lnurl:latest  LNURL1DP68GURN8GHJ7MRWW3UXYMM59E3K7MF0D3H82UNV9ACXZ7FLW4EK2UNFVS7NXWPKXSURYYAF0CA
+```
+
 ## Create alias
 Add the following to your `.bash_profile`
 
@@ -31,7 +37,7 @@ Then you can just run it like this:
 umbrel@umbrel:~ $ lnurl LNURL1DP68GURN8GHJ7MRWW3UXYMM59E3K7MF0D3H82UNV9ACXZ7FLW4EK2UNFVS7NXWPKXSURYYAF0CA
 ````
 
-## Umbrel Config
+## Umbrel and Citadel config
 
 ````ini
 [lnd]

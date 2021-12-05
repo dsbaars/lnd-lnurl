@@ -1,0 +1,6 @@
+bech32==1.2.0
+googleapis-common-protos==1.53.0
+grpcio==1.41.0
+lnurl==0.3.6
+requests==2.26.0
+PySocks==1.7.1

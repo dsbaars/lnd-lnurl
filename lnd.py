@@ -44,15 +44,13 @@ class Lnd:
         return combined_credentials
 
     def createInvoice(self, value, memo):
-        preimage = random.randbytes(32)
-
-        request = lninvoices.AddHoldInvoiceRequest(
-            hash=preimage,
+        request = ln.Invoice(
             memo=memo,
             value=int(value),
-            expiry=3600,
+            expiry=3600,            
         )
-        response = self.invoices_stub.AddHoldInvoice(request)
+
+        response = self.stub.AddInvoice(request)
         return response
     
     def payInvoice(self, pr):

@@ -50,3 +50,7 @@ socks = 10.21.21.11:9050
 1. `docker build -f Dockerfile.buster -t lndlnurl-buster .`
 2. `docker tag lndlnurl-buster ghcr.io/dsbaars/lnd-lnurl`
 3. `docker push ghcr.io/dsbaars/lnd-lnurl`
+
+## Update docker image
+
+`docker pull ghcr.io/dsbaars/lnd-lnurl:latest`

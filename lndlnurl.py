@@ -70,7 +70,9 @@ class LndLnurl:
         print("NOTE: Always withdraw the max amount at Stekking or you will lose sats")
         amount = None
         while amount is None or int(amount) < self.res['minWithdrawable'] / 1000 or int(amount) > self.res['maxWithdrawable'] / 1000: 
-            amount = input("How much do you want to withdraw (in sats): ")
+            amount = input("How much do you want to withdraw (in sats) or leave empty for %s sats: " % str(self.res['maxWithdrawable'] / 1000))
+            if amount == "":
+                amount = self.res['maxWithdrawable'] / 1000
         print("Creating an invoice for %s sats" % amount)
 
         lnInvoice = self.lnd.createInvoice(amount, self.res['defaultDescription'])

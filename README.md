@@ -9,18 +9,27 @@ Commandline tool to use LNURL `payRequest` and `withdrawRequest` with LND.
 
 ## Docker:
 
+### Generic
 ````sh
 docker run -t -i --rm -v cred:/code/cred:ro -v $PWD/lndlnurl.conf:/code/lndlnurl.conf ghcr.io/dsbaars/lnd-lnurl  LNURL1DP68GURN8GHJ7MRWW3UXYMM59E3K7MF0D3H82UNV9ACXZ7FLW4EK2UNFVS7NXWPKXSURYYAF0CA
 ````
 
-## Docker (on Umbrel machines):
+### Umbrel
 
 ````sh
 docker run -t -i --rm --network="umbrel_main_network"  -v ~/umbrel/lnd:/.lnd:ro -v $PWD/lndlnurl.conf:/code/lndlnurl.conf ghcr.io/dsbaars/lnd-lnurl:latest  LNURL1DP68GURN8GHJ7MRWW3UXYMM59E3K7MF0D3H82UNV9ACXZ7FLW4EK2UNFVS7NXWPKXSURYYAF0CA
 ````
 
+### Citadel
+
+```sh
+docker run -t -i --rm --network="citadel_main_network"  -v ~/citadel/lnd:/.lnd:ro -v $PWD/lndlnurl.conf:/code/lndlnurl.conf ghcr.io/dsbaars/lnd-lnurl:latest  LNURL1DP68GURN8GHJ7MRWW3UXYMM59E3K7MF0D3H82UNV9ACXZ7FLW4EK2UNFVS7NXWPKXSURYYAF0CA
+```
+
 ## Create alias
 Add the following to your `.bash_profile`
+
+### Umbrel
 
 ```bash
 lnurl() { docker run -t -i --rm --network="umbrel_main_network"  -v /home/umbrel/umbrel/lnd:/.lnd:ro -v /home/umbrel/lndlnurl.conf:/code/lndlnurl.conf ghcr.io/dsbaars/lnd-lnurl:latest $1; } 
@@ -31,7 +40,7 @@ Then you can just run it like this:
 umbrel@umbrel:~ $ lnurl LNURL1DP68GURN8GHJ7MRWW3UXYMM59E3K7MF0D3H82UNV9ACXZ7FLW4EK2UNFVS7NXWPKXSURYYAF0CA
 ````
 
-## Umbrel Config
+## Umbrel and Citadel config
 
 ````ini
 [lnd]

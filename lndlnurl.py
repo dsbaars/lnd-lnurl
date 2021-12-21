@@ -1,16 +1,22 @@
 import lnurl
 from lnurl import LnurlResponse
 import requests
+from grpc_gen.lightning_pb2 import _PAYMENT_PAYMENTSTATUS
 from lnd import Lnd
+import pprint
 
 class LndLnurl:
     def __init__(self, config, arguments):
         self.config = config
         self.lnurl = arguments.LNURL
-        try:
-            self.decoded = lnurl.decode(self.lnurl)
-        except lnurl.exceptions.InvalidLnurl:
-            raise ValueError("Invalid LNURL")
+        self.isLightningAddress = False
+        if "@" in self.lnurl:
+            self.isLightningAddress = True
+        else: 
+            try:
+                self.decoded = lnurl.decode(self.lnurl)
+            except lnurl.exceptions.InvalidLnurl:
+                raise ValueError("Invalid LNURL")
         self.session = None
         self.lnd = Lnd(
             config.get('lnd', 'rpcserver'),
@@ -33,8 +39,14 @@ class LndLnurl:
 
     def run(self):
         session = self.get_session()
-        self.r  = session.get(str(self.decoded))
-        self.res = self.r.json()
+
+        if self.isLightningAddress:
+            [handle, domain] = self.lnurl.split('@')
+            self.r = session.get('https://%s/.well-known/lnurlp/%s' % (domain, handle))
+            self.res = self.r.json()
+        else:
+            self.r  = session.get(str(self.decoded))
+            self.res = self.r.json()
         func =  {
             "payRequest": self.payRequest,
             "withdrawRequest": self.withdrawRequest,
@@ -58,9 +70,12 @@ class LndLnurl:
         res = LnurlResponse.from_dict(self.r.json())
         print("LN invoice: %s" % res.pr)
         print("---------------------------")
+        print("Attempting payment")
         payResponse = self.lnd.payInvoice(res.pr)
         for r in payResponse:
-            print(r)
+            print("Status: %s" % _PAYMENT_PAYMENTSTATUS.values[r.status].name)
+            if r.status == 2:
+                print("%s hops, total amount %s msat" % (len(r.htlcs[0].route.hops), r.htlcs[0].route.total_amt_msat))
         return
 
     def withdrawRequest(self):

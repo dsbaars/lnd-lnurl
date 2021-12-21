@@ -1,6 +1,7 @@
 # LND LNURL
 
-Commandline tool to use LNURL `payRequest` and `withdrawRequest` with LND.
+Commandline tool to use LNURL `payRequest` and `withdrawRequest` with LND.<br>
+Also works with [Lightning Address](https://lightningaddress.com/)
 
 ## Usage:
 
@@ -28,7 +29,8 @@ lnurl() { docker run -t -i --rm --network="umbrel_main_network"  -v /home/umbrel
 
 Then you can just run it like this:
 ````prompt
-umbrel@umbrel:~ $ lnurl LNURL1DP68GURN8GHJ7MRWW3UXYMM59E3K7MF0D3H82UNV9ACXZ7FLW4EK2UNFVS7NXWPKXSURYYAF0CA
+$ lnurl LNURL1DP68GURN8GHJ7MRWW3UXYMM59E3K7MF0D3H82UNV9ACXZ7FLW4EK2UNFVS7NXWPKXSURYYAF0CA
+$ lnurl djurib@lntxbot.com
 ````
 
 ## Umbrel Config

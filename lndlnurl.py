@@ -41,8 +41,15 @@ class LndLnurl:
 
         if self.isLightningAddress:
             [handle, domain] = self.lnurl.split('@')
-            self.r = session.get('https://%s/.well-known/lnurlp/%s' % (domain, handle))
-            self.res = self.r.json()
+            try:
+                self.r = session.get('https://%s/.well-known/lnurlp/%s' % (domain, handle))
+                self.res = self.r.json()
+            except requests.exceptions.HTTPError as err:
+                print("The domain %s does not support lightning address." % domain)
+                return
+            except:
+                print("Error processing lightning address.")
+                return
         else:
             self.r  = session.get(str(self.decoded))
             self.res = self.r.json()
@@ -52,7 +59,9 @@ class LndLnurl:
             "channelRequest": self.channelRequest,
             "hostedChannelRequest": self.hostedChannelRequest
         }
-
+        if not 'tag' in self.res:
+            print("Unexpected response, is your lightning-address or LNURL correct?")
+            return
         func[self.res['tag']]()
         return
 

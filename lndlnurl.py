@@ -3,7 +3,6 @@ from lnurl import LnurlResponse
 import requests
 from grpc_gen.lightning_pb2 import _PAYMENT_PAYMENTSTATUS
 from lnd import Lnd
-import pprint
 
 class LndLnurl:
     def __init__(self, config, arguments):
@@ -67,11 +66,11 @@ class LndLnurl:
             amount = input("How much do you want to pay (in sats): ")
         callback = res.callback + "?amount=" + str(int(amount) * 1000)
         self.r  = session.get(callback)
-        res = LnurlResponse.from_dict(self.r.json())
-        print("LN invoice: %s" % res.pr)
+        res = self.r.json()
+        print("LN invoice: %s" % res['pr'])
         print("---------------------------")
         print("Attempting payment")
-        payResponse = self.lnd.payInvoice(res.pr)
+        payResponse = self.lnd.payInvoice(res['pr'])
         for r in payResponse:
             print("Status: %s" % _PAYMENT_PAYMENTSTATUS.values[r.status].name)
             if r.status == 2:

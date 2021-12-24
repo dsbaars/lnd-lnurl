@@ -1,8 +1,10 @@
+import urllib
 import lnurl
 from lnurl import LnurlResponse
 import requests
 from grpc_gen.lightning_pb2 import _PAYMENT_PAYMENTSTATUS
 from lnd import Lnd
+from urllib.parse import urlsplit, parse_qsl, urlunsplit, urlencode
 
 class LndLnurl:
     def __init__(self, config, arguments):
@@ -88,6 +90,8 @@ class LndLnurl:
 
     def withdrawRequest(self):
         session = self.get_session()
+
+        print(self.res)
         print("Metadata: %s" % self.res['defaultDescription'])
         print("Withdraw Request - Min %s / Max %s satoshi" % (self.res['minWithdrawable'] / 1000, self.res['maxWithdrawable'] / 1000))
         print("NOTE: Always withdraw the max amount at Stekking or you will lose sats")
@@ -100,7 +104,16 @@ class LndLnurl:
 
         lnInvoice = self.lnd.createInvoice(amount, self.res['defaultDescription'])
 
-        callback = self.res['callback'] + "&pr=" + lnInvoice.payment_request
+        [scheme, netloc, path, query, fragment] = urlsplit(self.res['callback'])
+        query_params = parse_qsl(query)
+
+        if (self.res['k1']):
+            query_params.append(('k1', self.res['k1']))
+        query_params.append(('pr', lnInvoice.payment_request))
+        new_query_string = urlencode(query_params, doseq=True)
+
+        callback = urlunsplit((scheme, netloc, path, new_query_string, fragment))
+
         self.r  = session.get(callback)
         res = LnurlResponse.from_dict(self.r.json())
         print("---------------------------")

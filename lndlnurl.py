@@ -91,7 +91,6 @@ class LndLnurl:
     def withdrawRequest(self):
         session = self.get_session()
 
-        print(self.res)
         print("Metadata: %s" % self.res['defaultDescription'])
         print("Withdraw Request - Min %s / Max %s satoshi" % (self.res['minWithdrawable'] / 1000, self.res['maxWithdrawable'] / 1000))
         print("NOTE: Always withdraw the max amount at Stekking or you will lose sats")

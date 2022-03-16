@@ -1,4 +1,3 @@
-import urllib
 import lnurl
 from lnurl import LnurlResponse
 import requests
@@ -69,13 +68,14 @@ class LndLnurl:
 
     def payRequest(self):
         session = self.get_session()
-        res = LnurlResponse.from_dict(self.r.json())
-        print("Metadata: %s" % res.metadata.text)
-        print("Pay Request - Min %s / Max %s satoshi" % (res.min_sats, res.max_sats))
+
+        res = self.res
+        print("Metadata: %s" % res['metadata'])
+        print("Pay Request - Min %s / Max %s satoshi" % (int(res['minSendable']) / 1000, int(res['maxSendable']) / 1000))
         amount = None
-        while amount is None or int(amount) < res.min_sats or int(amount) > res.max_sats: 
+        while amount is None or int(amount) < res['minSendable'] / 1000 or int(amount) > res['maxSendable'] / 1000: 
             amount = input("How much do you want to pay (in sats): ")
-        callback = res.callback + "?amount=" + str(int(amount) * 1000)
+        callback = res['callback'] + "?amount=" + str(int(amount) * 1000)
         self.r  = session.get(callback)
         res = self.r.json()
         print("LN invoice: %s" % res['pr'])

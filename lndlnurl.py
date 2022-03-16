@@ -8,8 +8,10 @@ from urllib.parse import urlsplit, parse_qsl, urlunsplit, urlencode
 class LndLnurl:
     def __init__(self, config, arguments):
         self.config = config
-        self.lnurl = arguments.LNURL
+        self.lnurl : str = arguments.LNURL
         self.isLightningAddress = False
+        if 'lightning:' in self.lnurl:
+            self.lnurl = self.lnurl.replace('lightning:','')
         if "@" in self.lnurl:
             self.isLightningAddress = True
         else: 
